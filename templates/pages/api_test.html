@@ -1,0 +1,247 @@
+{{define "content"}}
+<div class="container p-8 mx-auto" x-data="apiTestPage">
+    <h1 class="text-3xl font-bold">API Test Page</h1>
+
+    <!-- Register User -->
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">Register User (POST /api/register)</h2>
+        <form @submit.prevent="registerUser()" x-data="{ name: '', email: '', password: '' }" class="mt-4 space-y-4">
+            <div>
+                <label for="registerName" class="block text-sm font-medium text-gray-700">Name</label>
+                <input type="text" id="registerName" x-model="name" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <div>
+                <label for="registerEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="registerEmail" x-model="email" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <div>
+                <label for="registerPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="registerPassword" x-model="password" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <button type="submit" class="px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">Register</button>
+        </form>
+    </div>
+
+    <!-- Login User -->
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">Login User (POST /api/login)</h2>
+        <form @submit.prevent="loginUser()" x-data="{ email: '', password: '' }" class="mt-4 space-y-4">
+            <div>
+                <label for="loginEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="loginEmail" x-model="email" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <div>
+                <label for="loginPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="loginPassword" x-model="password" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <button type="submit" class="px-4 py-2 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700">Login</button>
+        </form>
+    </div>
+
+    <!-- Create Event -->
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">Create Event (POST /api/events)</h2>
+        <form @submit.prevent="createEvent()" x-data="{ name: '', description: '', dateTime: '' }" class="mt-4 space-y-4">
+            <div>
+                <label for="eventName" class="block text-sm font-medium text-gray-700">Event Name</label>
+                <input type="text" id="eventName" x-model="name" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <div>
+                <label for="eventDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="eventDescription" x-model="description" class="w-full px-3 py-2 mt-1 border rounded-md"></textarea>
+            </div>
+            <div>
+                <label for="eventDateTime" class="block text-sm font-medium text-gray-700">Date and Time</label>
+                <input type="datetime-local" id="eventDateTime" x-model="dateTime" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <button type="submit" class="px-4 py-2 font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700">Create Event</button>
+        </form>
+    </div>
+
+    <!-- Get Events -->
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">Get All Events (GET /api/events)</h2>
+        <button @click="getEvents()" class="px-4 py-2 font-semibold text-white bg-red-600 rounded-md hover:bg-red-700">Get Events</button>
+        <pre x-text="JSON.stringify(events, null, 2)" class="p-4 mt-4 overflow-x-auto bg-gray-100 rounded-md"></pre>
+    </div>
+
+    <!-- Get Single Event -->
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">Get Single Event (GET /api/events/{id})</h2>
+        <form @submit.prevent="getEvent()" x-data="{ eventID: '' }" class="mt-4 space-y-4">
+            <div>
+                <label for="singleEventID" class="block text-sm font-medium text-gray-700">Event ID</label>
+                <input type="text" id="singleEventID" x-model="eventID" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <button type="submit" class="px-4 py-2 font-semibold text-white bg-yellow-600 rounded-md hover:bg-yellow-700">Get Event</button>
+        </form>
+        <pre x-text="JSON.stringify(singleEvent, null, 2)" class="p-4 mt-4 overflow-x-auto bg-gray-100 rounded-md"></pre>
+    </div>
+
+    <!-- Update Event -->
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">Update Event (PUT /api/events/{id})</h2>
+        <form @submit.prevent="updateEvent()" x-data="{ eventID: '', name: '', description: '', dateTime: '' }" class="mt-4 space-y-4">
+            <div>
+                <label for="updateEventID" class="block text-sm font-medium text-gray-700">Event ID</label>
+                <input type="text" id="updateEventID" x-model="eventID" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <div>
+                <label for="updateEventName" class="block text-sm font-medium text-gray-700">Name</label>
+                <input type="text" id="updateEventName" x-model="name" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <div>
+                <label for="updateEventDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="updateEventDescription" x-model="description" class="w-full px-3 py-2 mt-1 border rounded-md"></textarea>
+            </div>
+            <div>
+                <label for="updateEventDateTime" class="block text-sm font-medium text-gray-700">Date and Time</label>
+                <input type="datetime-local" id="updateEventDateTime" x-model="dateTime" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <button type="submit" class="px-4 py-2 font-semibold text-white bg-orange-600 rounded-md hover:bg-orange-700">Update Event</button>
+        </form>
+    </div>
+
+    <!-- Create Guest -->
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">Create Guest (POST /api/guests)</h2>
+        <form @submit.prevent="createGuest()" x-data="{ eventID: '', name: '', email: '' }" class="mt-4 space-y-4">
+            <div>
+                <label for="guestEventID" class="block text-sm font-medium text-gray-700">Event ID</label>
+                <input type="text" id="guestEventID" x-model="eventID" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <div>
+                <label for="guestName" class="block text-sm font-medium text-gray-700">Guest Name</label>
+                <input type="text" id="guestName" x-model="name" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <div>
+                <label for="guestEmail" class="block text-sm font-medium text-gray-700">Guest Email</label>
+                <input type="email" id="guestEmail" x-model="email" class="w-full px-3 py-2 mt-1 border rounded-md">
+            </div>
+            <button type="submit" class="px-4 py-2 font-semibold text-white bg-teal-600 rounded-md hover:bg-teal-700">Create Guest</button>
+        </form>
+    </div>
+
+    <!-- Logout -->
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">Logout (GET /logout)</h2>
+        <button @click="logout()" class="px-4 py-2 font-semibold text-white bg-gray-600 rounded-md hover:bg-gray-700">Logout</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('apiTestPage', () => ({
+            events: [],
+            singleEvent: null,
+            registerUser() {
+                const form = event.target
+                const data = {
+                    name: form.querySelector('#registerName').value,
+                    email: form.querySelector('#registerEmail').value,
+                    password: form.querySelector('#registerPassword').value,
+                }
+                fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.text())
+                .then(result => console.log('Register User:', result))
+                .catch(error => console.error('Register User Error:', error))
+            },
+            loginUser() {
+                const form = event.target
+                const data = {
+                    email: form.querySelector('#loginEmail').value,
+                    password: form.querySelector('#loginPassword').value,
+                }
+                fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then(result => console.log('Login User:', result))
+                .catch(error => console.error('Login User Error:', error))
+            },
+            createEvent() {
+                const form = event.target
+                const data = {
+                    name: form.querySelector('#eventName').value,
+                    description: form.querySelector('#eventDescription').value,
+                    date_time: form.querySelector('#eventDateTime').value,
+                }
+                fetch('/api/events', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.text())
+                .then(result => console.log('Create Event:', result))
+                .catch(error => console.error('Create Event Error:', error))
+            },
+            getEvents() {
+                fetch('/api/events')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.events = data
+                        console.log('Get Events:', data)
+                    })
+                    .catch(error => console.error('Get Events Error:', error))
+            },
+            getEvent() {
+                const form = event.target
+                const eventID = form.querySelector('#singleEventID').value
+                fetch(`/api/events/${eventID}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        this.singleEvent = data
+                        console.log('Get Single Event:', data)
+                    })
+                    .catch(error => console.error('Get Single Event Error:', error))
+            },
+            updateEvent() {
+                const form = event.target
+                const eventID = form.querySelector('#updateEventID').value
+                const data = {
+                    name: form.querySelector('#updateEventName').value,
+                    description: form.querySelector('#updateEventDescription').value,
+                    date_time: form.querySelector('#updateEventDateTime').value,
+                }
+                fetch(`/api/events/${eventID}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.text())
+                .then(result => console.log('Update Event:', result))
+                .catch(error => console.error('Update Event Error:', error))
+            },
+            createGuest() {
+                const form = event.target
+                const eventID = form.querySelector('#guestEventID').value
+                const data = {
+                    name: form.querySelector('#guestName').value,
+                    email: form.querySelector('#guestEmail').value,
+                    event_id: parseInt(eventID),
+                }
+                fetch('/api/guests', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.text())
+                .then(result => console.log('Create Guest:', result))
+                .catch(error => console.error('Create Guest Error:', error))
+            },
+            logout() {
+                fetch('/logout')
+                    .then(response => response.text())
+                    .then(result => console.log('Logout:', result))
+                    .catch(error => console.error('Logout Error:', error))
+            },
+        }))
+    })
+</script>
+{{end}}

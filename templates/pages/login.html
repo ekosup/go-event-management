@@ -1,0 +1,22 @@
+{{define "content"}}
+<div class="flex items-center justify-center h-screen">
+    <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md" x-data="{ email: '', password: '', returnTo: new URLSearchParams(window.location.search).get('return_to') || '/' }">
+        <h1 class="text-2xl font-bold text-center">Login</h1>
+        <form @submit.prevent="fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, return_to: returnTo }) }).then(res => res.json()).then(data => window.location.href = data.redirect)">
+            <input type="hidden" x-model="returnTo">
+            <div class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" x-model="email" class="w-full px-3 py-2 mt-1 border rounded-md" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" x-model="password" class="w-full px-3 py-2 mt-1 border rounded-md" required>
+                </div>
+            </div>
+            <button type="submit" class="w-full px-4 py-2 mt-6 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">Login</button>
+        </form>
+        <p class="text-sm text-center">Don't have an account? <a href="/register" class="text-blue-600 hover:underline">Register</a></p>
+    </div>
+</div>
+{{end}}

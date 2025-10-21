@@ -1,0 +1,58 @@
+{{define "content"}}
+<div class="container p-8 mx-auto" x-data="dashboardPage">
+    <h1 class="text-3xl font-bold">Dashboard</h1>
+
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">Create Event</h2>
+        <form @submit.prevent="fetch('/api/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newEvent) }).then(() => { newEvent = { name: '', description: '', dateTime: '' }; fetchEvents() })">
+            <div class="mt-4 space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Event Name</label>
+                    <input type="text" id="name" x-model="newEvent.name" class="w-full px-3 py-2 mt-1 border rounded-md" required>
+                </div>
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="description" x-model="newEvent.description" class="w-full px-3 py-2 mt-1 border rounded-md" required></textarea>
+                </div>
+                <div>
+                    <label for="dateTime" class="block text-sm font-medium text-gray-700">Date and Time</label>
+                    <input type="datetime-local" id="dateTime" x-model="newEvent.dateTime" class="w-full px-3 py-2 mt-1 border rounded-md" required>
+                </div>
+            </div>
+            <button type="submit" class="w-full px-4 py-2 mt-6 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">Create Event</button>
+        </form>
+    </div>
+
+    <div class="p-6 mt-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold">My Events</h2>
+        <ul id="event-list" class="mt-4 space-y-4">
+            <template x-for="event in events" :key="event.ID">
+                <li class="p-4 border rounded-md cursor-pointer hover:bg-gray-50" @click="window.location.href = `/events/${event.ID}`">
+                    <h3 class="text-xl font-bold" x-text="event.name"></h3>
+                    <p x-text="event.description"></p>
+                    <p x-text="new Date(event.date_time).toLocaleString()"></p>
+                </li>
+            </template>
+        </ul>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('dashboardPage', () => ({
+            events: [],
+            newEvent: { name: '', description: '', dateTime: '' },
+            init() {
+                this.fetchEvents()
+            },
+            fetchEvents() {
+                fetch('/api/events')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.events = data
+                    })
+            }
+        }))
+    })
+</script>
+{{end}}

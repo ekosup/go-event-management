@@ -1,0 +1,13 @@
+{
+  "name": "presence-app",
+  "version": "1.0.0",
+  "description": "QR Code Presence & Event Management System",
+  "main": "main.go",
+  "scripts": {
+    "build:css": "tailwindcss -i ./assets/css/input.css -o ./static/css/style.css --watch"
+  },
+  "devDependencies": {
+    "alpinejs": "^3.13.3",
+    "tailwindcss": "^3.4.1"
+  }
+}
